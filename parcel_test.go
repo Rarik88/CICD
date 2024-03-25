@@ -2,12 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"github.com/stretchr/testify/require"
 	"math/rand"
 	"testing"
 	"time"
-
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -32,7 +30,7 @@ func getTestParcel() Parcel {
 // TestAddGetDelete проверяет добавление, получение и удаление посылки
 func TestAddGetDelete(t *testing.T) {
 	// prepare
-	db, err := sql.Open("sqlite", "tracker.db")
+	db, err := sql.Open("sqlite", "./tracker.db")
 	if err != nil {
 		require.NoError(t, err)
 	}
