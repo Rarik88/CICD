@@ -37,3 +37,21 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ github.repository }}:latest
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Log in to DockerHub
+        run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
+      - name: Pull Docker image
+        run: docker pull ${DOCKER_USERNAME}/${{ github.repository }}
+
+      - name: Stop and remove existing container (if any)
+        run: docker stop my-container || true && docker rm my-container || true
+
+      - name: Run Docker container
+        run: docker run -d --name my-container -p 8080:8080 ${DOCKER_USERNAME}/${{ github.repository }}:latest        
