@@ -1,27 +1,25 @@
 name: Docker Workflow
 
-on: push
+on:
+  push:
+    branches:
+      - main  
+
 jobs:
   test:
     runs-on: ubuntu-latest
     container: golang:1.22
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
       - name: Run Unit Tests
-        run: GOOS=linux GOARCH=amd64 go test
+        run: |
+          GOOS=linux GOARCH=amd64 go test
 
       - name: Vet
         run: |
           go vet ./...
-
-    env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
